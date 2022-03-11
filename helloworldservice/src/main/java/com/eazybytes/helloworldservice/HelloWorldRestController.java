@@ -8,6 +8,6 @@ public class HelloWorldRestController {
 
 	@GetMapping(value = "/hello")
 	public String sayHello() {
-		return "Hello, Welcome to course on Microservices";
+		return "Hello, Welcome to course on Microservices with Openshift";
 	}
 }
