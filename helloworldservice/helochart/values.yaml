@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: dhanamjaya/helloworldservice
+  repository: helloworldservice:latest
   pullPolicy: IfNotPresent
 
 service:
