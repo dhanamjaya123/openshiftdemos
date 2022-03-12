@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: image-registry.openshift-image-registry.svc:5000/helochart:latest
+  repository: image-registry.openshift-image-registry.svc:5000/hellochart:latest
   pullPolicy: IfNotPresent
 
 service:
