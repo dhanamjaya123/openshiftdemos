@@ -1,0 +1,10 @@
+replicaCount: 1
+image:
+  repository: dhanu/helloworldservice
+  pullPolicy: IfNotPresent
+  service:
+      port: 1001
+         name: offer
+           targetport: 1001
+            container:
+                name: helochart
