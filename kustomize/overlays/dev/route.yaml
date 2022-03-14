@@ -1,15 +1,14 @@
-apiVersion: route.openshift.io/v1
 kind: Route
+apiVersion: route.openshift.io/v1
 metadata:
   name: simple
+  labels:
+    app: hello-service
 spec:
-  host: simple-article-test.apps.beta.rhepds.com
-  port:
-    targetPort: 8080-tcp
   to:
     kind: Service
-    name: dev-simple
-    weight: 100
-  wildcardPolicy: None
+    name: simple
+  port:
+    targetPort: 8080
 
   
