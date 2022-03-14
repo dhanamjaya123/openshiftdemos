@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: simple
 spec:
-  host: localhost
+  host: simple-article-test.apps.beta.rhepds.com
   port:
     targetPort: 8080-tcp
   to:
