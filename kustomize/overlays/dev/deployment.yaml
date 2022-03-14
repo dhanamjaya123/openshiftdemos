@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - image: quay.io/dhanamjaya/do400-deploying-environments:latest
+        imagePullPolicy: Always
+        name: simple
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+          - name: APP_GREETING
+            value: 'Hey, this is the DEVELOPMENT environment of the App'
+  
