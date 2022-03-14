@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple
+  name: simple-dev
 spec:
-  replicas: 1
+  replicas: 2
   template:
     spec:
       containers:
       - image: quay.io/dhanamjaya/do400-deploying-environments:latest
         imagePullPolicy: Always
-        name: simple
+        name: simple-dev
         ports:
           - containerPort: 8080
             protocol: TCP
