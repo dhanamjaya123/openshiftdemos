@@ -1,8 +1,3 @@
-namePrefix: dev-  
-commonLabels:
-  variant: development
-#commonAnnotations:
-#  note: We are on dev now
 bases:
 - ../../base
 patchesStrategicMerge:
