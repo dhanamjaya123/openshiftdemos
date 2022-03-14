@@ -12,9 +12,8 @@ spec:
     type: Git
     git:
       uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
-  strategy:
+  sourceStrategy:
     type: Source
-    sourceStrategy:
     from:
       kind: "ImageStreamTag"
       name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
