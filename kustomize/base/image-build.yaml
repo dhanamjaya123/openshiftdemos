@@ -3,13 +3,15 @@ kind: BuildConfig
 metadata:
   name: simple-dev
   labels:
-    app: simple-dev
+    name: simple-dev
 spec:
+  triggers:
+    - type: ConfigChange
   source:
+    contextDir: helloworldservice
     type: Git
     git:
-      uri: 'https://github.com/monodot/container-up'
-    contextDir: helloworldservice
+      uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
   strategy:
     type: Source
   output:
