@@ -1,5 +1,4 @@
 resources:
-- image-build.yaml
 - deployment.yaml
 - service.yaml
 - route.yaml
