@@ -1,0 +1,26 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  labels:
+    build: simple-dev
+  name: simple-dev
+  namespace: simple-dev
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: simple-dev
+  namespace: simple-dev
+  labels:
+    app: simple-dev
+spec:
+  strategy:
+    type: Source
+    sourceStrategy:
+       name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
+  source:
+    contextDir: "helloworldservice"
+    type: "Git"
+    git:
+      uri: "https://github.com/dhanamjaya123/openshiftdemos.git"
+  triggers: []
