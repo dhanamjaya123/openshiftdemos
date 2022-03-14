@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple
+  name: simple-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: simple
+      app: simple-dev
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: simple          
+        app: simple-dev         
     spec:
       containers:
       - name: simple
