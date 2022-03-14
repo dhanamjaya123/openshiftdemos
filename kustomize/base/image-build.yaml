@@ -14,10 +14,6 @@ metadata:
   labels:
     app: simple-dev
 spec:
-  output:
-    to:
-      kind: ImageStreamTag
-      name: 'simple-dev'
   strategy:
     type: Source
     sourceStrategy:
