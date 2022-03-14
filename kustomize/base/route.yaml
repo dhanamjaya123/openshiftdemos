@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: simple
 spec:
-  host: hello.apps-crc.testing
+  host: localhost
   port:
     targetPort: 8080-tcp
   to:
