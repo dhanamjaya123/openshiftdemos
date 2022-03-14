@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: simple-dev
-  name: simple
+  name: simple-dev
 spec:
   ports:
   - name: 8080-tcp
