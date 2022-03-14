@@ -1,13 +1,13 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: simple
+  name: simple-dev
   labels:
     app: simple-dev
 spec:
   to:
     kind: Service
-    name: simple
+    name: simple-dev
   port:
     targetPort: 8080
 
