@@ -1,8 +1,7 @@
 deployment:
-    image: quay.io/dhanamjaya/do400-deploying-environments
-     version: latest
-    replicas: 1
-    includeHealthChecks: true
-
+  image: quay.io/dhanamjaya/do400-deploying-environments
+  version: latest
+  replicas: 1
+  includeHealthChecks: true
 route:
-    host: hellochart
+  host: hellochart
