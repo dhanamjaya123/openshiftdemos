@@ -1,5 +1,5 @@
 kind: BuildConfig
-apiVersion: build.openshift.io/v1
+apiVersion: quay.io/dhanamjaya
 metadata:
   name: simple-dev
 spec:
