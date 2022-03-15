@@ -2,7 +2,6 @@ replicaCount: 1
 
 image:
   repository: quay.io/dhanamjaya/do400-deploying-environments
-  version: latest
   pullPolicy: IfNotPresent
 
 service:
