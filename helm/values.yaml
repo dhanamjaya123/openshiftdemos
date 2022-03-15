@@ -5,9 +5,9 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  port: 1001
-  name: hellochart
-  targetport: 1001
+  port: 8080
+  name: helm
+  targetport: 8080
 
 container:
-  name: hellochart
+  name: helm
