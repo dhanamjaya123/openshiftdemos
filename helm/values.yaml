@@ -1,12 +1,8 @@
 deployment:
-    image: quay.io/wpernath/simple-quarkus
-    version: 1.2.0
+    image: quay.io/dhanamjaya/do400-deploying-environments
+    tag: latest
     replicas: 1
     includeHealthChecks: true
 
 route:
-    host: simple-article-helm.apps-crc.testing
-
-config:
-    greeting: 'We are on a newer version now!'
-
+    host: hello
