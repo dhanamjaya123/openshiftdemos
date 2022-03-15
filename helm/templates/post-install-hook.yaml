@@ -33,4 +33,7 @@ spec:
                 echo "Here we could now do initialization work."
                 echo "Like filling our DB with some data or what's so ever"
                 echo "..."
+
                 sleep 10
+
+
