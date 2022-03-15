@@ -7,15 +7,13 @@ spec:
     type: Source
   source:
     contextDir: helloworldservice
-      type: Git
-      git:
-        uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
-        ref: master
-    output:
-      to:
-        kind: ImageStreamTag
-        name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
-    pushSecret:
-      name: quay-credentials
-
-
+    type: Git
+    git:
+      uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
+      ref: master
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
+pushSecret:
+  name: quay-credentials
