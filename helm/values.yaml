@@ -1,6 +1,6 @@
 deployment:
     image: quay.io/dhanamjaya/do400-deploying-environments
-    tag: latest
+     version: latest
     replicas: 1
     includeHealthChecks: true
 
