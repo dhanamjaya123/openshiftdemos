@@ -1,4 +1,14 @@
-deployment:
-  image: quay.io/dhanamjaya/do400-deploying-environments
+replicaCount: 1
+
+image:
+  repository: quay.io/dhanamjaya/do400-deploying-environments
   version: latest
-  replicas: 1
+  pullPolicy: IfNotPresent
+
+service:
+  port: 1001
+  name: hellochart
+  targetport: 1001
+
+container:
+  name: hellochart
