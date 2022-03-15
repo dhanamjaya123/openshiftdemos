@@ -5,7 +5,7 @@ metadata:
   spec:
     nodeSelector: {}
     strategy:
-      type: Source
+      type: Docker
     source:
       contextDir: helloworldservice
       type: Git
