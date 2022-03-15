@@ -13,7 +13,7 @@ spec:
       ref: master
   output:
     to:
-      kind: ImageStreamTag
+      kind: DockerImage
       name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
 pushSecret:
   name: quay-credentials
