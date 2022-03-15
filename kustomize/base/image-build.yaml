@@ -4,8 +4,8 @@ metadata:
   name: simple-dev
   spec:
     nodeSelector: {}
-    strategy:
-      type: Docker
+    sourcestrategy:
+      type: Source
     source:
       contextDir: helloworldservice
       type: Git
