@@ -3,8 +3,6 @@ apiVersion: build.openshift.io/v1
 metadata:
   name: simple-dev
 spec:
-  strategy:
-    type: Source
   source:
     contextDir: helloworldservice
     type: Git
@@ -17,3 +15,4 @@ spec:
       name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
 pushSecret:
   name: quay-credentials
+
