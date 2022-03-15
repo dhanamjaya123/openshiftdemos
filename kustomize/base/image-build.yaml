@@ -1,19 +1,22 @@
-apiVersion: build.openshift.io/v1
 kind: BuildConfig
+apiVersion: build.openshift.io/v1
 metadata:
   name: simple-dev
-  labels:
-    name: simple-dev
-spec:
-  triggers:
-    - type: ConfigChange
-  source:
-    contextDir: helloworldservice
-    type: Git
-    git:
-      uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
-  customStrategy:
-    type: Source
-    from:
-      kind: "ImageStreamTag"
-      name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
+  spec:
+    nodeSelector: {}
+    strategy:
+      type: Docker
+    source:
+      contextDir: helloworldservice
+      type: Git
+      git:
+        uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
+        ref: master
+    output:
+      to:
+        kind: DockerImage
+        name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
+    pushSecret:
+      name: quay-credentials
+
+
