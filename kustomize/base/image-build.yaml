@@ -2,9 +2,11 @@ kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
   name: simple-dev
-  spec:
-    source:
-      contextDir: helloworldservice
+spec:
+  strategy:
+    type: Source
+  source:
+    contextDir: helloworldservice
       type: Git
       git:
         uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
