@@ -1,46 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hellochart
+  name: {{ .Release.Name | quote }}
+  labels: 
+    {{- include "hellochart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.deployment.replicas | default 1 }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: hellochart
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      {{- include "hellochart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: hellochart          
+        {{- include "hellochart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - name: hellochart
-        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.version }}"
-        imagePullPolicy: Always        
-        {{- if .Values.deployment.includeHealthChecks }}        
-        readinessProbe:
-          httpGet:
-            path: /q/health/ready
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
-        livenessProbe:
-          httpGet:
-            path: /q/health/live
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 2
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
-        {{- end }}
-        ports:
-          - containerPort: 8080
-            protocol: TCP
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.image.repository | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetport }}
