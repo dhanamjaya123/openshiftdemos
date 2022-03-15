@@ -2,19 +2,19 @@ kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
   name: simple-dev
-  spec: null
+spec:
   nodeSelector: {}
-  strategy: null
-  type: Docker
+  strategy:
+    type: Docker
   source:
     type: Git
-    git: null
-  uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
-  ref: master
-  contextDir: helloworldservice
+    git:
+      uri: 'https://github.com/dhanamjaya123/openshiftdemos'
+      ref: master
+    contextDir: 'helloworldservice'
   output:
     to:
       kind: DockerImage
-      name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
-  pushSecret:
-    name: quay-credentials
+      name: quay.io/dhanamjaya/do400-deploying-environments
+    pushSecret:
+      name: quay-credentials
