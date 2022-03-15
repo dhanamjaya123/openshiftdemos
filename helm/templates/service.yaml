@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: {{ .Values.service.name }} 
   labels:
-    {{- include "hellochart.labels" . | nindent 4 }}
+    {{- include "helm.labels" . | nindent 4 }}
 spec:
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetport }}
       name: http
   selector:
-    {{- include "hellochart.selectorLabels" . | nindent 4 }}
+    {{- include "helm.selectorLabels" . | nindent 4 }}
