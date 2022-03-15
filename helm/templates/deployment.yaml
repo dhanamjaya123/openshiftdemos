@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name | quote }}
   labels: 
-    {{- include "hellochart.labels" . | nindent 4 }}
+    {{- include "helm.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
