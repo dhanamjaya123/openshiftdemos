@@ -3,9 +3,6 @@ apiVersion: build.openshift.io/v1
 metadata:
   name: simple-dev
   spec:
-    nodeSelector: {}
-    sourcestrategy:
-      type: Source
     source:
       contextDir: helloworldservice
       type: Git
@@ -14,7 +11,7 @@ metadata:
         ref: master
     output:
       to:
-        kind: DockerImage
+        kind: ImageStreamTag
         name: 'quay.io/dhanamjaya/do400-deploying-environments:latest'
     pushSecret:
       name: quay-credentials
