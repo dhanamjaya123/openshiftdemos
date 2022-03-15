@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ .Values.service.name }} 
   labels:
-    app: hellochart
-  name: hellochart
+    {{- include "hellochart.labels" . | nindent 4 }}
 spec:
   ports:
-  - name: 8080-tcp
-    port: 8080
-    protocol: TCP
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetport }}
+      name: http
   selector:
-    app: hellochart
+    {{- include "hellochart.selectorLabels" . | nindent 4 }}
