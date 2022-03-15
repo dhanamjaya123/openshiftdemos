@@ -1,53 +1,49 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hellochart.fullname" . }}
-  labels:
-    {{- include "hellochart.labels" . | nindent 4 }}
+  name: simple
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   selector:
     matchLabels:
-      {{- include "hellochart.selectorLabels" . | nindent 6 }}
+      app: simple
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "hellochart.selectorLabels" . | nindent 8 }}
+        app: simple          
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "hellochart.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      - name: simple
+        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.version }}"
+        imagePullPolicy: Always        
+        {{- if .Values.deployment.includeHealthChecks }}        
+        readinessProbe:
+          httpGet:
+            path: /q/health/ready
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 2
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        {{- end }}
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        envFrom:
+          - configMapRef:
+              name: app-config
