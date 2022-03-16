@@ -1,9 +1,19 @@
-FROM maven:3.5.4-jdk-8-alpine as maven
-COPY ./pom.xml ./pom.xml
-COPY ./src ./src
-RUN mvn dependency:go-offline -B
-RUN mvn package
-FROM openjdk:8u171-jre-alpine
-WORKDIR /deployment
-COPY --from=maven target/helloworldservice-*.jar ./adevguide/helloworldservice.jar
-CMD ["java", "-jar", "./deployment/helloworldservice.jar"]
+FROM quay.io/eclipse/che-java11-maven:nightly
+
+MAINTAINER Dhanamjaya
+
+USER root
+
+COPY src /home/app/src
+COPY pom.xml /home/app
+
+#ERROR
+#RUN nocmd
+
+RUN mkdir -p /var/local/SP
+
+RUN mvn -f /home/app/pom.xml clean package
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/home/app/target/spring-boot-hello-world-0.0.1-SNAPSHOT.jar"]
