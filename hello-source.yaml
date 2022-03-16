@@ -34,7 +34,7 @@ objects:
         git:
           uri: '${APP_GIT_URL}'
           ref: '${BRANCH_NAME}'
-        contextDir: helloworldservice
+        contextDir: /
       triggers:
         - type: Generic
           generic:
@@ -56,12 +56,6 @@ objects:
     spec:
       strategy:
         type: Rolling
-        rollingParams:
-          updatePeriodSeconds: 1
-          intervalSeconds: 1
-          timeoutSeconds: 600
-          maxUnavailable: 25%
-          maxSurge: 25%
         resources: {}
         activeDeadlineSeconds: 21600
       triggers:
@@ -74,7 +68,9 @@ objects:
               kind: ImageStreamTag
               namespace: '${PROJECT_NAME}'
               name: '${APP_NAME}:latest'
-    replicas: 1
+        - type: ConfigChange
+      replicas: 1
+      revisionHistoryLimit: 10
   - kind: Service
     apiVersion: v1
     metadata:
