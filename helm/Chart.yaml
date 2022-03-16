@@ -4,4 +4,9 @@ description: A helm chart for the basic app described on https://www.opensourcer
 type: application
 version: 0.0.10
 appVersion: "1.2.0"
+dependencies:
+ - name: mariadb
+   version: 9.3.11
+   repository: https://charts.bitnami.com/bitnami
+
 
