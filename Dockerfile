@@ -1,4 +1,4 @@
-FROM quay.io/eclipse/che-java11-maven:nightly
+FROM quay.io/eclipse/che-java8-maven:nightly
 
 MAINTAINER Dhanamjaya
 
@@ -12,7 +12,7 @@ COPY pom.xml /home/app
 
 RUN mkdir -p /var/local/SP
 
-RUN mvn -f /home/app/pom.xml clean install
+RUN mvn -f /home/app/pom.xml clean package
 
 EXPOSE 8080
 
