@@ -4,13 +4,16 @@ MAINTAINER Dhanamjaya
 
 USER root
 
+COPY src /home/app/src
+COPY pom.xml /home/app
+
 #ERROR
 #RUN nocmd
 
 RUN mkdir -p /var/local/SP
 
-RUN mvn -f /pom.xml clean install
+RUN mvn -f /home/app/pom.xml clean package
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/target/spring-boot-hello-world-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/home/app/target/spring-boot-hello-world-0.0.1-SNAPSHOT.jar"]
