@@ -53,7 +53,6 @@ objects:
       labels: null
       app: '${APP_NAME}'
     spec:
-      template: null
       metadata:
         labels:
           name: '${APP_NAME}'
@@ -65,6 +64,9 @@ objects:
             ports: null
           - containerPort: 8080
             protocol: TCP
+            env:
+              - name: RUN_ENV
+                value: OpenShift
     restartPolicy: Always
     replicas: 1
     triggers:
