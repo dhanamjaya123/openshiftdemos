@@ -33,7 +33,7 @@ objects:
       source:
         git:
           uri: APP_GIT_URL
-          contextDir: /helloworldservice
+        contextDir: /helloworldservice
       strategy:
         type: Docker
         dockerStrategy:
