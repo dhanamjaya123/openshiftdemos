@@ -34,7 +34,7 @@ objects:
       git:
         uri: ${APP_GIT_URL}
         ref: ${BRANCH_NAME}
-      contextDir: /
+      contextDir: /helloworldservice
     triggers:
       - type: Generic
         generic:
