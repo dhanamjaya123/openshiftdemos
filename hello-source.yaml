@@ -80,14 +80,6 @@ objects:
       test: false
       selector:
         app: '${APP_NAME}'
-        deploymentconfig: '${APP_NAME}'
-      template:
-        metadata:
-          labels:
-            app: '${APP_NAME}'
-            deploymentconfig: '${APP_NAME}'
-        spec:
-          restartPolicy: Always
   - kind: Service
     apiVersion: v1
     metadata:
