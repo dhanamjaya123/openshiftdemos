@@ -18,7 +18,7 @@ spec:
       type: "ImageChange"
   source: 
     git:
-      uri: "https://github.com/tsrana/spring-boot-hello-world"
+      uri: "https://github.com/dhanamjaya123/openshiftdemos.git"
   strategy: 
     sourceStrategy:
       from:
@@ -32,4 +32,4 @@ spec:
   output: 
     to:
       kind: "ImageStreamTag"
-      name: "hello:latest"
+      name: "quay.io/dhanamjaya/do400-deploying-environments:latest"
