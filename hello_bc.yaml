@@ -32,4 +32,4 @@ spec:
   output: 
     to:
       kind: "ImageStreamTag"
-      name: "quay.io/dhanamjaya/do400-deploying-environments:latest"
+      name: "hello:latest"
