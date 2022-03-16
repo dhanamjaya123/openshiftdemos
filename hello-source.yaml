@@ -78,7 +78,7 @@ objects:
             - "hello1"
           from:
             kind: "ImageStreamTag"
-            name: "hello1:latest"
+            name: "java-11-openjdk:latest"
     strategy: 
       type: "Rolling"
     paused: false 
