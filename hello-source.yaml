@@ -87,13 +87,7 @@ objects:
             app: '${APP_NAME}'
             deploymentconfig: '${APP_NAME}'
         spec:
-          volumes: {}
-          containers: {}
           restartPolicy: Always
-          terminationGracePeriodSeconds: 30
-          dnsPolicy: ClusterFirst
-          securityContext: {}
-          schedulerName: default-scheduler
   - kind: Service
     apiVersion: v1
     metadata:
