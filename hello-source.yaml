@@ -6,13 +6,9 @@ objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      annotations: null
-      labels:
-        app: '${APP_NAME}'
+      annotations:
+        description: Keeps track of changes in the application image
       name: '${APP_NAME}'
-    spec:
-      lookupPolicy:
-        local: false
   - kind: BuildConfig
     apiVersion: v1
     metadata:
@@ -20,68 +16,74 @@ objects:
       namespace: '${PROJECT_NAME}'
       labels:
         app: '${APP_NAME}'
-    spec:
-      runPolicy: Serial
-      triggers:
-        - type: GitHub
-          github:
-            secret: secret101
-        - type: Generic
-          generic:
-            secret: secret101
-        - type: ImageChange
-      source:
-        git:
-          uri: APP_GIT_URL
-        contextDir: /helloworldservice
-      strategy:
-        type: Docker
-        dockerStrategy:
-          dockerfilePath: Dockerfile
-      output:
-        to:
-          kind: ImageStreamTag
-          name: '${APP_NAME}:latest'
+    spec: null
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: '${APP_NAME}:latest'
+    successfulBuildsHistoryLimit: 5
+    failedBuildsHistoryLimit: 5
+    strategy:
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+      postCommit: {}
+    source:
+      type: Git
+      git:
+        uri: '${APP_GIT_URL}'
+        ref: '${BRANCH_NAME}'
+      contextDir: /helloworldservice
+    triggers:
+      - type: Generic
+        generic:
+          secretReference:
+            name: '${APP_NAME}-generic-webhook-secret'
+      - type: GitHub
+        github:
+          secretReference:
+            name: '${APP_NAME}-github-webhook-secret'
+      - type: ConfigChange
+    runPolicy: Serial
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
       name: '${APP_NAME}'
-      namespace: '${PROJECT_NAME}'
-      labels:
-        app: '${APP_NAME}'
+      labels: null
+      app: '${APP_NAME}'
     spec:
-      template:
-        metadata:
-          labels:
-            name: '${APP_NAME}'
-            app: '${APP_NAME}'
-        spec:
-          containers:
-            - name: '${APP_NAME}'
-              imagePullPolicy: Always
-              ports:
-                - containerPort: 8080
-                  protocol: TCP
-              env:
-                - name: RUN_ENV
-                  value: OpenShift-With-Dockerfile
-          restartPolicy: Always
-      replicas: 1
-      triggers:
-        - type: ConfigChange
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - '${APP_NAME}'
-            from:
-              kind: ImageStreamTag
-              name: '${APP_NAME}:latest'
-      strategy:
-        type: Rolling
-      paused: false
-      revisionHistoryLimit: 2
-      minReadySeconds: 0
+      metadata:
+        labels:
+          name: '${APP_NAME}'
+          app: '${APP_NAME}'
+      spec:
+        containers:
+          - name: '${APP_NAME}'
+            imagePullPolicy: Always
+            ports: null
+          - containerPort: 8080
+            protocol: TCP
+            env:
+              - name: RUN_ENV
+                value: OpenShift
+    restartPolicy: Always
+    replicas: 1
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - '${APP_NAME}'
+          from:
+            kind: ImageStreamTag
+            name: '${APP_NAME}:latest'
+    strategy:
+      type: Rolling
+    paused: false
+    revisionHistoryLimit: 2
+    minReadySeconds: 0
   - kind: Service
     apiVersion: v1
     metadata:
@@ -98,6 +100,7 @@ objects:
           targetPort: 8080
       selector:
         app: '${APP_NAME}'
+        deploymentconfig: '${APP_NAME}'
       type: ClusterIP
       sessionAffinity: None
   - kind: Route
