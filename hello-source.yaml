@@ -39,7 +39,7 @@ objects:
       sourceStrategy:
         from:
           kind: "ImageStreamTag"
-          name: "ubi8-openjdk-11:1.11"
+          name: "ubi8-openjdk-11:latest"
           namespace: openshift    
     output: 
       to:
