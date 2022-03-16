@@ -32,7 +32,7 @@ objects:
       source:
         git:
           uri: 'https://github.com/dhanamjaya123/openshiftdemos.git'
-        contextDir: helloworldservice
+        contextDir: /helloworldservice
       strategy:
         type: Docker
         dockerStrategy:
