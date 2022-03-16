@@ -1,127 +1,131 @@
+---
 apiVersion: v1
 kind: Template
 metadata:
   name: docker-template
 objects:
-  - kind: ImageStream
-    apiVersion: v1
-    metadata:
-      annotations:
-        description: Keeps track of changes in the application image
-      name: '${APP_NAME}'
-  - kind: BuildConfig
-    apiVersion: v1
-    metadata:
-      name: '${APP_NAME}'
-      namespace: '${PROJECT_NAME}'
-      labels:
-        app: '${APP_NAME}'
-    spec:
-      nodeSelector: null
-      output:
-        to:
-          kind: ImageStreamTag
-          name: '${APP_NAME}:latest'
-      successfulBuildsHistoryLimit: 5
-      failedBuildsHistoryLimit: 5
-      strategy:
-        type: Docker
-        dockerStrategy:
-          dockerfilePath: Dockerfile
-        postCommit: {}
-      source:
-        type: Git
-        git:
-          uri: '${APP_GIT_URL}'
-          ref: '${BRANCH_NAME}'
-        contextDir: /helloworldservice
-      triggers:
-        - type: Generic
-          generic:
-            secretReference:
-              name: '${APP_NAME}-generic-webhook-secret'
-        - type: GitHub
-          github:
-            secretReference:
-              name: '${APP_NAME}-github-webhook-secret'
-        - type: ConfigChange
-      runPolicy: Serial
-  - kind: DeploymentConfig
-    apiVersion: v1
-    metadata:
-      name: '${APP_NAME}'
-      namespace: '${PROJECT_NAME}'
-      labels:
-        app: '${APP_NAME}'
-    spec:
-      strategy:
-        type: Rolling
-        rollingParams:
-          updatePeriodSeconds: 1
-          intervalSeconds: 1
-          timeoutSeconds: 600
-          maxUnavailable: 25%
-          maxSurge: 25%
-        resources: {}
-        activeDeadlineSeconds: 21600
-      triggers:
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - '${APP_NAME}'
-            from:
-              kind: ImageStreamTag
-              namespace: '${PROJECT_NAME}'
-              name: '${APP_NAME}:latest'
-        - type: ConfigChange
-      replicas: 1
-  - kind: Service
-    apiVersion: v1
-    metadata:
-      annotations: null
-      name: '${APP_NAME}'
-      namespace: '${PROJECT_NAME}'
-      labels:
-        app: '${APP_NAME}'
-    spec:
-      ports:
-        - name: 8080-tcp
-          protocol: TCP
-          port: 8080
-          targetPort: 8080
-      selector:
-        app: '${APP_NAME}'
-        deploymentconfig: '${APP_NAME}'
-      type: ClusterIP
-      sessionAffinity: None
-  - kind: Route
-    apiVersion: route.openshift.io/v1
-    metadata:
-      name: '${APP_NAME}'
-      namespace: '${PROJECT_NAME}'
-      labels:
-        app: '${APP_NAME}'
-      annotations: null
-    spec:
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    annotations:
+      description: Keeps track of changes in the application image
+    name: "${APP_NAME}"
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${APP_NAME}"
+    namespace: "${PROJECT_NAME}"
+    labels:
+      app: "${APP_NAME}"
+  spec:
+    nodeSelector:
+    output:
       to:
-        kind: Service
-        name: '${APP_NAME}'
-        weight: 100
-      port:
-        targetPort: 8080-tcp
-    wildcardPolicy: None
+        kind: ImageStreamTag
+        name: "${APP_NAME}:latest"
+    successfulBuildsHistoryLimit: 5
+    failedBuildsHistoryLimit: 5
+    strategy:
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+      postCommit: {}
+    source:
+      type: Git
+      git:
+        uri: "${APP_GIT_URL}"
+        ref: "${BRANCH_NAME}"
+      contextDir: "/helloworldservice"
+    triggers:
+    - type: Generic
+      generic:
+        secretReference:
+          name: "${APP_NAME}-generic-webhook-secret"
+    - type: GitHub
+      github:
+        secretReference:
+          name: "${APP_NAME}-github-webhook-secret"
+    - type: ConfigChange
+    runPolicy: Serial
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    labels:
+      name: "${APP_NAME}"
+      app: "${APP_NAME}"
+  spec:
+    containers:
+    - name: "${APP_NAME}"
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      env:
+      - name: RUN_ENV
+        value: OpenShift
+    restartPolicy: Always
+    replicas: 1
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${APP_NAME}"
+        from:
+          kind: ImageStreamTag
+          name: "${APP_NAME}:latest"
+    strategy:
+      type: Rolling
+    paused: false
+    revisionHistoryLimit: 2
+    minReadySeconds: 0
+- kind: Service
+  apiVersion: v1
+  metadata:
+    annotations:
+    name: "${APP_NAME}"
+    namespace: "${PROJECT_NAME}"
+    labels:
+      app: "${APP_NAME}"
+  spec:
+    ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      app: "${APP_NAME}"
+      deploymentconfig: "${APP_NAME}"
+    type: ClusterIP
+    sessionAffinity: None
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: "${APP_NAME}"
+    namespace: "${PROJECT_NAME}"
+    labels:
+      app: "${APP_NAME}"
+    annotations:
+  spec:
+    to:
+      kind: Service
+      name: "${APP_NAME}"
+      weight: 100
+    port:
+      targetPort: 8080-tcp
+  wildcardPolicy: None
 parameters:
-  - name: APP_NAME
-    displayName: Application Name
-    required: true
-  - name: PROJECT_NAME
-    displayName: Project Name
-    required: true
-  - name: APP_GIT_URL
-    displayName: Application Source Git URL
-    required: true
-  - name: BRANCH_NAME
-    displayName: Branch Name
-    required: false
-    value: master
+- name: APP_NAME
+  displayName: Application Name
+  required: true
+- name: PROJECT_NAME
+  displayName: Project Name
+  required: true
+- name: APP_GIT_URL
+  displayName: Application Source Git URL
+  required: true
+- name: BRANCH_NAME
+  displayName: Branch Name
+  required: false
+  value: master
