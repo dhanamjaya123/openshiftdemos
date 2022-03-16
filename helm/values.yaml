@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/dhanamjaya/do400-deploying-environments
+  repository: quay.io/redhattraining/famous-quotes
   pullPolicy: IfNotPresent
 
 service:
