@@ -9,7 +9,7 @@ USER root
 
 RUN mkdir -p /var/local/SP
 
-RUN mvn -f /pom.xml clean package
+RUN mvn -f /pom.xml clean install
 
 EXPOSE 8080
 
