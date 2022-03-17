@@ -1,11 +1,16 @@
-FROM maven as build
+FROM maven:3.8.4-openjdk-11 as build
+WORKDIR /workspace/app
 
-MAINTAINER Dhanamjaya
+COPY pom.xml .
 
-FROM openjdk:11.0.10-jre
+RUN mvn -B -e -C -T 1C org.apache.maven.plugins:maven-dependency-plugin:3.0.2:go-offline
 
-# copy fat WAR
-COPY spring-boot-app-0.0.1-SNAPSHOT.war /app.war
+COPY . .
+RUN mvn clean package -Dmaven.test.skip=true
 
-# runs application
-CMD ["/usr/bin/java", "-jar", "-Dspring.profiles.active=default", "/app.war"]
+
+FROM openjdk:11-buster
+VOLUME /tmp
+ARG DEPENDENCY=/workspace/app/target/dependency
+COPY --from=build /workspace/app/target/sample-spring-boot-on-kubernetes-1.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-jar", "app.jar"]
