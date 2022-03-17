@@ -1,19 +1,26 @@
-FROM quay.io/eclipse/che-java11-maven:nightly
+FROM maven:3.5-jdk-8-alpine AS build
 
-MAINTAINER Dhanamjaya
+WORKDIR /code
 
-USER root
+COPY src/pom.xml /code/pom.xml
+RUN ["mvn", "dependency:resolve"]
+RUN ["mvn", "verify"]
 
-COPY src /home/app/src
-COPY pom.xml /home/app
+# Adding source, compile and package into a fat jar
+COPY ["src/src/main", "/code/src/main"]
+RUN ["mvn", "package"]
 
-#ERROR
-#RUN nocmd
+FROM openjdk:8-jre
 
-RUN mkdir -p /var/local/SP
+WORKDIR /app
 
-RUN mvn -f /home/app/pom.xml clean package
+RUN useradd -u 1001 -r -g 0 -d /app -s /sbin/nologin \
+    -c "Default Application User" default && \
+    chown -R 1001:0 /app && \
+    chmod -R g+rw /app
 
-EXPOSE 8080
+USER 1001
 
-ENTRYPOINT ["java", "-jar", "/home/app/target/spring-boot-hello-world-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /code/target/worker-jar-with-dependencies.jar /
+
+CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/worker-jar-with-dependencies.jar"]
