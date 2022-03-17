@@ -2,14 +2,14 @@ FROM maven as build
 MAINTAINER Dhanamjaya
 
 
-WORKDIR /app
+WORKDIR /
 COPY . .
 RUN mvn install
 
 #jdk
 FROM openjdk:11.0.10-jre
-WORKDIR /app
-COPY --from=build /app/target/helloservice-0.0.1-SNAPSHOT.jar /app 
+WORKDIR /
+COPY --from=build /target/helloservice-0.0.1-SNAPSHOT.jar /app 
 
 EXPOSE 1001
 
