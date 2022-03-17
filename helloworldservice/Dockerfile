@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM java-11-openjdk-headless
 WORKDIR /app
 COPY --from=build /app/target/hello.jar /app
 EXPOSE 8080
