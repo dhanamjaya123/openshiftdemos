@@ -1,4 +1,4 @@
-FROM java-11-openjdk-headless
+FROM maven
 WORKDIR /app
 COPY --from=build /app/target/hello.jar /app
 EXPOSE 8080
