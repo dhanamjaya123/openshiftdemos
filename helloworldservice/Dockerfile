@@ -1,26 +1,19 @@
-FROM maven:3.5-jdk-8-alpine AS build
+FROM quay.io/eclipse/che-java8-maven:nightly
 
-WORKDIR /code
+MAINTAINER tech-tejendra
 
-COPY src/pom.xml /code/pom.xml
-RUN ["mvn", "dependency:resolve"]
-RUN ["mvn", "verify"]
+USER root
 
-# Adding source, compile and package into a fat jar
-COPY ["src/src/main", "/code/src/main"]
-RUN ["mvn", "package"]
+COPY src /home/app/src
+COPY pom.xml /home/app
 
-FROM openjdk:8-jre
+#ERROR
+#RUN nocmd
 
-WORKDIR /app
+RUN mkdir -p /var/local/SP
 
-RUN useradd -u 1001 -r -g 0 -d /app -s /sbin/nologin \
-    -c "Default Application User" default && \
-    chown -R 1001:0 /app && \
-    chmod -R g+rw /app
+RUN mvn -f /home/app/pom.xml clean package
 
-USER 1001
+EXPOSE 8080
 
-COPY --from=build /code/target/worker-jar-with-dependencies.jar /
-
-CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/worker-jar-with-dependencies.jar"]
+ENTRYPOINT ["java", "-jar", "/home/app/target/"]
