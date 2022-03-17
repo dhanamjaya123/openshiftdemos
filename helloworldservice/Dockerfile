@@ -1,19 +1,16 @@
-FROM quay.io/eclipse/che-java11-maven:nightly
-
+FROM maven as build
 MAINTAINER Dhanamjaya
 
-USER root
 
-COPY src /home/app/src
-COPY pom.xml /home/app
+WORKDIR /app
+COPY . .
+RUN mvn install
 
-#ERROR
-#RUN nocmd
+#jdk
+FROM openjdk:11.0.10-jre
+WORKDIR /app
+COPY --from=build /app/target/helloservice-0.0.1-SNAPSHOT.jar /app 
 
-RUN mkdir -p /var/local/SP
+EXPOSE 1001
 
-RUN mvn -f /home/app/pom.xml clean package
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "/home/app/target/spring-boot-hello-world-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "helloservice-0.0.1-SNAPSHOT.jar"] 
