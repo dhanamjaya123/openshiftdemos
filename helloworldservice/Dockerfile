@@ -16,4 +16,4 @@ RUN mvn -f /home/app/pom.xml clean package
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/home/app/target/"]
+ENTRYPOINT ["java", "-jar", "/home/app/target/helloworld.jar"]
