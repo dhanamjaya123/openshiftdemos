@@ -1,9 +1,53 @@
-FROM openjdk:11-slim as build
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+#
+# Before building the container image run:
+#
+# $> ./mvnw clean package -DskipTests
+#
+# Then, build the image with:
+# $> docker build -f src/main/docker/Dockerfile.jvm -t quay.io/dhanamjaya/do400-deploying-environments .
+#
+# Push all image changes to quay.io
+# $> docker push quay.io/dhanamjaya/do400-deploying-environments -a
+#
+# Create a stage image (and push changes with docker push)
+# $> docker tag quay.io/dhanamjaya/do400-deploying-environments:latest quay.io/dhanamjaya/do400-deploying-environments:stage
+#
+# Test run the container once
+# $> docker run -i -p 8080:8080 quay.io/dhanamjaya/do400-deploying-environments:latest
+# 
+# 
+#
+###
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4 
 
-MAINTAINER tech-tejendra
+ARG JAVA_PACKAGE=java-11-openjdk-headless
+ARG RUN_JAVA_VERSION=1.3.8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+# Install java and the run-java script
+# Also set up permissions for user `1001`
+RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
+    && microdnf update \
+    && microdnf clean all \
+    && mkdir /deployments \
+    && chown 1001 /deployments \
+    && chmod "g+rwX" /deployments \
+    && chown 1001:root /deployments \
+    && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o /deployments/run-java.sh \
+    && chown 1001 /deployments/run-java.sh \
+    && chmod 540 /deployments/run-java.sh \
+    && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
 
-# Add the application's jar to the container
-COPY /tmp/build/inputs/accounts-0.0.1-SNAPSHOT.jar accounts-0.0.1-SNAPSHOT.jar
+# Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+# We make four distinct layers so if there are application changes the library layers can be re-used
+COPY --chown=1001 target/ /deployments/lib/
+COPY --chown=1001 target/*.jar /deployments/
+COPY --chown=1001 target/ /deployments/app/
+COPY --chown=1001 target/ /deployments/helloworldservice/
 
-#execute the application
-ENTRYPOINT ["java","-jar","/tmp/build/inputs/accounts-0.0.1-SNAPSHOT.jar"]
+EXPOSE 8080
+USER 1001
+
+ENTRYPOINT [ "/deployments/run-java.sh" ]
