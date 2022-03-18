@@ -1,4 +1,4 @@
-FROM openjdk:11-slim as build
-COPY  target/HelloWorld-0.0.1-SNAPSHOT.jar /opt/HelloWorld-0.0.1-SNAPSHOT.jar
+FROM java:11
+ADD target/hello.jar hello.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","target/HelloWorld-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT [ "java","-jar","hello.jar" ]
