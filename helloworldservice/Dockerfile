@@ -1,4 +1,4 @@
-FROM   registry.access.redhat.com/ubi8/ubi:8.0
+FROM registry.access.redhat.com/openjdk/openjdk-11-rhel7
 
 MAINTAINER   Red Hat Training <training@redhat.com>
 
@@ -7,7 +7,7 @@ ENV	  JAVA_OPTIONS -Xmx512m
 
 
 # Install the Java runtime, create a user for running the app, and set permissions
-RUN   yum install -y --disableplugin=subscription-manager java-1.8.0-openjdk-headless && \
+RUN   yum install -y --disableplugin=subscription-manager java-11-openjdk-headless && \
       yum clean all --disableplugin=subscription-manager -y && \
       mkdir -p /opt/app-root/bin
 
@@ -16,13 +16,11 @@ ADD   https://github.com/RedHatTraining/DO288-apps/releases/download/OCP-4.1-1/h
 
 COPY  run-app.sh /opt/app-root/bin/
 
-RUN chgrp -R 0 /opt/app-root && \
-    chmod -R g=u /opt/app-root
+RUN chgrp -R 0 /opt/app-root && chmod -R g=u /opt/app-root
 
 EXPOSE 8080
 
 USER  1001
 
 # Run the fat JAR
-#CMD   /opt/app-root/bin/run-app.sh
-ENTRYPOINT ["sh", "/opt/app-root/bin/run-app.sh"]
+CMD   /opt/app-root/bin/run-app.sh
