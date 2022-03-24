@@ -6,11 +6,7 @@ USER root
 
 RUN mkdir -p /home/app/
 
-COPY src /home/app/
-
-COPY pom.xml /home/app
-
-RUN mvn -f /home/app/pom.xml clean package
+COPY /home/app/hello.jar hello.jar
 
 EXPOSE 8080
 
